@@ -1,0 +1,139 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Web Search",
+        "version": "0.1.0"
+    },
+    "servers": [
+        {
+            "url": "https://api.imprompt.ai/p",
+            "description": "test"
+        }
+    ],
+    "paths": {
+        "/api/plugin/web-search/google/search": {
+            "get": {
+                "summary": "Google Search",
+                "operationId": "google_search_api_plugin_web_search_google_search_get",
+                "parameters": [
+                    {
+                        "description": "Parameter defines the query you want to search. You can use anything that you would use in a regular Google search. e.g. inurl:, site:, intitle:. We also support advanced search query parameters such as as_dt and as_eq. ",
+                        "required": true,
+                        "schema": {
+                            "title": "q",
+                            "type": "string",
+                            "description": "Parameter defines the query you want to search. You can use anything that you would use in a regular Google search. e.g. inurl:, site:, intitle:. We also support advanced search query parameters such as as_dt and as_eq. "
+                        },
+                        "name": "q",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Parameter defines the SerpApi private key to use.",
+                        "required": false,
+                        "schema": {
+                            "title": "API key",
+                            "type": "string",
+                            "description": "Parameter defines the SerpApi private key to use."
+                        },
+                        "name": "api_key",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Parameter defines the language to use for the Google search. It's a two-letter language code. (e.g., en for English, es for Spanish, or fr for French).",
+                        "required": false,
+                        "schema": {
+                            "title": "hl",
+                            "type": "string",
+                            "description": "Parameter defines the language to use for the Google search. It's a two-letter language code. (e.g., en for English, es for Spanish, or fr for French).",
+                            "default": "en"
+                        },
+                        "name": "hl",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Parameter defines the country to use for the Google search. It's a two-letter country code. (e.g., us for the United States, uk for United Kingdom, or fr for France). ",
+                        "required": false,
+                        "schema": {
+                            "title": "gl",
+                            "type": "string",
+                            "description": "Parameter defines the country to use for the Google search. It's a two-letter country code. (e.g., us for the United States, uk for United Kingdom, or fr for France). ",
+                            "default": "us"
+                        },
+                        "name": "gl",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,90 @@
+{
+    "schema_version": "0.0.1",
+    "openplugin_manifest_version": "0.1.0",
+    "name": "Imprompt Web Search",
+    "auth": {
+        "authorization_type": "bearer",
+        "type": "user_http"
+    },
+    "contact_email": "shrikant@imprompt.ai",
+    "description": "Plugin to do web search. This plugin will get search engine result pages for a given search query. It supports Google web search.",
+    "legal_info_url":null,
+    "logo_url":null,
+    "openapi_doc_url": "https://raw.githubusercontent.com/ImpromptAI/openplugin-manifests/main/vendor-owned/unofficial/serp_api/openapi.json",
+    "permutate_doc_url": null,
+    "input_modules": [
+        {
+            "description": "This will handle file coming to the plugin",
+            "finish_output_port": "text",
+            "id": "1",
+            "initial_input_port": "filepath",
+            "name": "convert_file_to_text",
+            "processors": [
+                {
+                    "input_port": "filepath",
+                    "metadata": {},
+                    "output_port": "text",
+                    "processor_implementation_type": "file_to_text_with_langchain",
+                    "processor_type": "file_to_text"
+                }
+            ]
+        }
+    ],
+    "plugin_operations": {
+        "/api/plugin/web-search/google/search": {
+            "get": {
+                "human_usage_examples": [
+                    "Do the websearch for hubspot competitors",
+                    "Do google search for martech saas companies",
+                    "Web search about tigers"
+                ],
+                "output_modules": [
+                    {
+                        "default_module": true,
+                        "description": "This will convert to template response",
+                        "finish_output_port": "text",
+                        "initial_input_port": "json",
+                        "name": "template_response",
+                        "processors": [
+                            {
+                                "input_port": "json",
+                                "metadata": {
+                                    "mime_type": "text",
+                                    "template": "{% for item in data %}\nposition= {{ item.position }}, title= {{ item.title }}, link= {{ item.link }}, snippet= {{ item.snippet }}\n{% endfor %}",
+                                    "template_prompt": "select all title"
+                                },
+                                "output_port": "text",
+                                "processor_implementation_type": "template_engine_with_jinja",
+                                "processor_type": "template_engine"
+                            }
+                        ]
+                    }
+                ],
+                "plugin_signature_helpers": [
+                    "Get top 5 search results by default",
+                    "Use google search by default",
+                    "Extract the query you want to search from the #PROMPT and assign it to q."
+                ]
+            }
+        }
+    },
+    "plugin_selector_helpers": [
+        "For web search"
+    ],
+    "preferred_approaches": [
+        {
+            "base_strategy": "oai functions",
+            "llm": {
+                "frequency_penalty": 0,
+                "max_tokens": 2048,
+                "model_name": "gpt-3.5-turbo-0613",
+                "presence_penalty": 0,
+                "provider": "OpenAIChat",
+                "temperature": 0,
+                "top_p": 1
+            },
+            "name": "OAI functions-OpenAIChat",
+            "pre_prompt": null
+        }
+    ]
+}
